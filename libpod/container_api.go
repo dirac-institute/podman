@@ -677,6 +677,9 @@ type ContainerCheckpointOptions struct {
 	// important to be able to restore a container multiple
 	// times with '--import --name'.
 	IgnoreStaticMAC bool
+	// Compression tells the API whether to use Gzip compression 
+	// for exported containers
+	Compression string
 }
 
 // Checkpoint checkpoints a container
