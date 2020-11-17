@@ -758,7 +758,7 @@ func (c *Container) addNamespaceContainer(g *generate.Generator, ns LinuxNS, ctr
 	return nil
 }
 
-func (c *Container) exportCheckpoint(dest string, ignoreRootfs bool) error {
+func (c *Container) exportCheckpoint(dest string, ignoreRootfs bool, compression string) error {
 	if (len(c.config.NamedVolumes) > 0) || (len(c.Dependencies()) > 0) {
 		return errors.Errorf("Cannot export checkpoints of containers with named volumes or dependencies")
 	}
@@ -837,9 +837,13 @@ func (c *Container) exportCheckpoint(dest string, ignoreRootfs bool) error {
 			includeFiles = append(includeFiles, "deleted.files")
 		}
 	}
+	var compressionType = archive.Uncompressed
+	if (compression == "gzip") {
+		compressionType = archive.Gzip
+	}
 
 	input, err := archive.TarWithOptions(c.bundlePath(), &archive.TarOptions{
-		Compression:      archive.Gzip,
+		Compression:      compressionType,
 		IncludeSourceDir: true,
 		IncludeFiles:     includeFiles,
 	})
@@ -931,7 +935,7 @@ func (c *Container) checkpoint(ctx context.Context, options ContainerCheckpointO
 	defer c.newContainerEvent(events.Checkpoint)
 
 	if options.TargetFile != "" {
-		if err = c.exportCheckpoint(options.TargetFile, options.IgnoreRootfs); err != nil {
+		if err = c.exportCheckpoint(options.TargetFile, options.IgnoreRootfs, options.Compression); err != nil {
 			return err
 		}
 	}

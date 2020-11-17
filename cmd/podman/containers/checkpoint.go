@@ -53,11 +53,13 @@ func init() {
 	flags.BoolVarP(&checkpointOptions.All, "all", "a", false, "Checkpoint all running containers")
 
 	exportFlagName := "export"
-	flags.StringVarP(&checkpointOptions.Export, exportFlagName, "e", "", "Export the checkpoint image to a tar.gz")
+	flags.StringVarP(&checkpointOptions.Export, exportFlagName, "e", "", "Export the checkpoint image to a tar")
 	_ = checkpointCommand.RegisterFlagCompletionFunc(exportFlagName, completion.AutocompleteDefault)
 
 	flags.BoolVar(&checkpointOptions.IgnoreRootFS, "ignore-rootfs", false, "Do not include root file-system changes when exporting")
 	validate.AddLatestFlag(checkpointCommand, &checkpointOptions.Latest)
+
+	flags.StringVarP(&checkpointOptions.Compression, "compression", "c", "gzip", "Compress image using specified algorithm")
 }
 
 func checkpoint(cmd *cobra.Command, args []string) error {

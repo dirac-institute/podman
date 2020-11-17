@@ -171,6 +171,7 @@ type CheckpointOptions struct {
 	Latest         bool
 	LeaveRunning   bool
 	TCPEstablished bool
+	Compression    string
 }
 
 type CheckpointReport struct {

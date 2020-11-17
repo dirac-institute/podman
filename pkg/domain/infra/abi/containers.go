@@ -492,6 +492,7 @@ func (ic *ContainerEngine) ContainerCheckpoint(ctx context.Context, namesOrIds [
 		TargetFile:     options.Export,
 		IgnoreRootfs:   options.IgnoreRootFS,
 		KeepRunning:    options.LeaveRunning,
+		Compression:    options.Compression,
 	}
 
 	if options.All {
